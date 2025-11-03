@@ -2,7 +2,7 @@
 
 **Authors:** Sudha Rajendran and Rohitha Janga
 **Institution:** Ontario Tech University
-**GitHub:** https://github.com/jangarohitha94/a11yassist-vscode
+**GitHub:** https://github.com/sudha-coderepo/a11yassist-vscode
 
 ## Available NPM Scripts
 
@@ -254,7 +254,7 @@ npm run compile
 
 ```powershell
 # 1. Clone repository
-git clone https://github.com/jangarohitha94/a11yassist-vscode
+git clone https://github.com/sudha-coderepo/a11yassist-vscode
 cd a11yassist-vscode
 
 # 2. Install dependencies
@@ -340,14 +340,14 @@ You can also run these scripts from VS Code:
 
 ## GitHub Repository
 
-**Repository:** https://github.com/jangarohitha94/a11yassist-vscode
+**Repository:** https://github.com/sudha-coderepo/a11yassist-vscode
 
 **Clone:**
 ```bash
-git clone https://github.com/jangarohitha94/a11yassist-vscode.git
+git clone https://github.com/sudha-coderepo/a11yassist-vscode.git
 ```
 
-**Issues:** https://github.com/jangarohitha94/a11yassist-vscode/issues
+**Issues:** https://github.com/sudha-coderepo/a11yassist-vscode/issues
 
 ---
 

@@ -1,7 +1,7 @@
 # A11YAssist - Package and Install Script
 # Authors: Sudha Rajendran and Rohitha Janga
 # Institution: Ontario Tech University
-# GitHub: https://github.com/jangarohitha94/a11yassist-vscode
+# GitHub: https://github.com/sudha-coderepo/a11yassist-vscode
 
 Write-Host "================================================" -ForegroundColor Cyan
 Write-Host "  A11YAssist - Package and Install" -ForegroundColor Cyan
@@ -94,7 +94,7 @@ if (Test-Path "a11yassist-1.0.0.vsix") {
 }
 
 Write-Host ""
-Write-Host "GitHub: https://github.com/jangarohitha94/a11yassist-vscode" -ForegroundColor Gray
+Write-Host "GitHub: https://github.com/sudha-coderepo/a11yassist-vscode" -ForegroundColor Gray
 Write-Host "Authors: Sudha Rajendran and Rohitha Janga" -ForegroundColor Gray
 Write-Host ""
 pause

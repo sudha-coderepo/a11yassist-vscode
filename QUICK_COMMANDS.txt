@@ -1,7 +1,7 @@
 ===============================================
   A11YAssist - Quick Commands Reference
   Authors: Sudha Rajendran and Rohitha Janga
-  GitHub: jangarohitha94/a11yassist-vscode
+  GitHub: sudha-coderepo/a11yassist-vscode
 ===============================================
 
 UPDATED: Package.json now includes your GitHub username
@@ -57,13 +57,13 @@ GITHUB REPOSITORY
 ===============================================
 
 Repository:
-https://github.com/jangarohitha94/a11yassist-vscode
+https://github.com/sudha-coderepo/a11yassist-vscode
 
 Clone:
-git clone https://github.com/jangarohitha94/a11yassist-vscode.git
+git clone https://github.com/sudha-coderepo/a11yassist-vscode.git
 
 Issues:
-https://github.com/jangarohitha94/a11yassist-vscode/issues
+https://github.com/sudha-coderepo/a11yassist-vscode/issues
 
 ===============================================
 USEFUL COMMANDS
@@ -135,7 +135,7 @@ SUPPORT
 
 Authors:
 - Sudha Rajendran (sudha.rajendran@ontariotechu.ca)
-- Rohitha Janga (jangarohitha94@github)
+- Rohitha Janga
 
 Institution: Ontario Tech University
 License: MIT

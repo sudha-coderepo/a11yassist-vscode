@@ -11,12 +11,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jangarohitha94/a11yassist-vscode"
+    "url": "https://github.com/sudha-coderepo/a11yassist-vscode"
   },
   "bugs": {
-    "url": "https://github.com/jangarohitha94/a11yassist-vscode/issues"
+    "url": "https://github.com/sudha-coderepo/a11yassist-vscode/issues"
   },
-  "homepage": "https://github.com/jangarohitha94/a11yassist-vscode#readme",
+  "homepage": "https://github.com/sudha-coderepo/a11yassist-vscode#readme",
   "license": "MIT",
   "keywords": [
     "accessibility",
