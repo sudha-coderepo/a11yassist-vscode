@@ -1,0 +1,152 @@
+===============================================
+  A11YAssist - Installation Instructions
+  Authors: Sudha Rajendran and Rohitha Janga
+  Ontario Tech University
+===============================================
+
+SUCCESS! Your extension compiled without errors!
+
+Now follow these steps to package and install:
+
+===============================================
+OPTION 1: Run in Development Mode (Testing)
+===============================================
+
+This is the easiest way to test the extension:
+
+1. In VS Code, press F5
+   (You should already have the folder open)
+
+2. A new "Extension Development Host" window opens
+
+3. Test the extension:
+   - Press Ctrl+Shift+K to open keyboard guide
+   - Press Ctrl+Shift+A to run accessibility audit
+   - Click the accessibility icon in the sidebar
+
+===============================================
+OPTION 2: Package and Install (Production)
+===============================================
+
+To install A11YAssist as a regular extension:
+
+Step 1: Package the extension
+------------------------------
+In PowerShell, run:
+
+    npx vsce package
+
+OR double-click: PACKAGE_EXTENSION.bat
+
+This creates: a11yassist-1.0.0.vsix
+
+Step 2: Install the extension
+-----------------------------
+In PowerShell, run:
+
+    code --install-extension a11yassist-1.0.0.vsix
+
+Step 3: Restart VS Code
+-----------------------
+Close and reopen VS Code
+
+Step 4: Verify installation
+---------------------------
+- Press Ctrl+Shift+P
+- Type "A11YAssist"
+- You should see all A11YAssist commands
+
+===============================================
+OPTION 3: Quick Commands (Copy & Paste)
+===============================================
+
+Copy and paste these commands into PowerShell:
+
+# Package the extension
+npx vsce package
+
+# Install it
+code --install-extension a11yassist-1.0.0.vsix
+
+# Restart VS Code (close all windows first)
+
+===============================================
+TROUBLESHOOTING
+===============================================
+
+Issue: "vsce: command not found"
+Solution: Use "npx vsce package" instead of "vsce package"
+
+Issue: "ENOENT: no such file"
+Solution: Make sure you ran "npx vsce package" first
+
+Issue: Extension doesn't appear
+Solution: Restart VS Code completely (close all windows)
+
+===============================================
+VERIFY INSTALLATION
+===============================================
+
+After installation, verify these work:
+
+1. Status bar shows "SR Enhanced"
+2. Accessibility icon appears in sidebar
+3. Ctrl+Shift+K opens keyboard guide
+4. Ctrl+Shift+A runs audit (on HTML file)
+5. Settings show A11YAssist options
+
+===============================================
+TEST A11YAssist
+===============================================
+
+1. Create a new file (Ctrl+N)
+
+2. Paste this HTML:
+   <!DOCTYPE html>
+   <html>
+   <body>
+       <img src="test.jpg">
+       <button></button>
+       <input type="text">
+   </body>
+   </html>
+
+3. Save as test.html
+
+4. Press Ctrl+Shift+A
+
+5. Check Problems panel (Ctrl+Shift+M)
+   Should show 3 accessibility issues
+
+===============================================
+KEYBOARD SHORTCUTS
+===============================================
+
+Ctrl+Shift+A - Run accessibility audit
+Ctrl+Shift+K - Show keyboard guide
+Ctrl+Shift+C - Announce current context
+Ctrl+Shift+D - Describe element
+F8 - Next error
+Shift+F8 - Previous error
+
+===============================================
+DOCUMENTATION FILES
+===============================================
+
+README.md - Main documentation
+WINDOWS_INSTALL.md - Complete installation guide
+INSTALLATION_SUMMARY.md - Quick reference
+COMPILE_AND_RUN.md - Compilation instructions
+This file - INSTALL_GUIDE.txt
+
+===============================================
+SUPPORT
+===============================================
+
+Authors: Sudha Rajendran and Rohitha Janga
+Institution: Ontario Tech University
+Email: sudha.rajendran@ontariotechu.ca
+
+===============================================
+
+A11YAssist - Making VS Code accessible for everyone!

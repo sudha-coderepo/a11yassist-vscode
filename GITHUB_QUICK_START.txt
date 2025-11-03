@@ -1,0 +1,128 @@
+===============================================
+  A11YAssist - GitHub Quick Start
+  Authors: Sudha Rajendran and Rohitha Janga
+  GitHub: jangarohitha94
+===============================================
+
+EASIEST METHOD: Use the Automated Script
+===============================================
+
+Just run this PowerShell script:
+
+    .\setup-git-and-push.ps1
+
+It will:
+✅ Initialize Git
+✅ Configure user info
+✅ Add all files
+✅ Create initial commit
+✅ Add GitHub remote
+✅ Push to GitHub
+
+===============================================
+MANUAL METHOD: Step-by-Step Commands
+===============================================
+
+1. Initialize Git:
+   git init
+
+2. Configure user:
+   git config user.name "Rohitha Janga"
+   git config user.email "your-email@example.com"
+
+3. Add all files:
+   git add .
+
+4. Commit:
+   git commit -m "Initial commit: A11YAssist extension"
+
+5. Rename branch:
+   git branch -M main
+
+6. Add remote:
+   git remote add origin https://github.com/jangarohitha94/a11yassist-vscode.git
+
+7. Push to GitHub:
+   git push -u origin main
+
+===============================================
+AUTHENTICATION
+===============================================
+
+When prompted for credentials:
+
+Username: jangarohitha94
+
+Password: Use a Personal Access Token (NOT your GitHub password)
+
+Get token from: https://github.com/settings/tokens
+- Click "Generate new token (classic)"
+- Select "repo" scope
+- Copy token (starts with ghp_)
+- Use as password
+
+===============================================
+AFTER FIRST PUSH
+===============================================
+
+For future updates, use:
+
+1. Make changes
+2. git add .
+3. git commit -m "Description of changes"
+4. git push
+
+===============================================
+VERIFY SUCCESS
+===============================================
+
+After pushing, visit:
+https://github.com/jangarohitha94/a11yassist-vscode
+
+You should see all your files!
+
+===============================================
+TROUBLESHOOTING
+===============================================
+
+Issue: "remote origin already exists"
+Fix: git remote remove origin
+     git remote add origin https://github.com/jangarohitha94/a11yassist-vscode.git
+
+Issue: "Authentication failed"
+Fix: Use Personal Access Token instead of password
+
+Issue: "Repository not found"
+Fix: Create repository on GitHub first:
+     https://github.com/new
+
+===============================================
+FILES THAT WILL BE PUSHED
+===============================================
+
+✅ All source code (src/)
+✅ package.json
+✅ Documentation (.md files)
+✅ LICENSE
+✅ Configuration files
+
+❌ node_modules/ (excluded by .gitignore)
+❌ out/ (excluded by .gitignore)
+❌ *.vsix (excluded by .gitignore)
+
+===============================================
+NEXT STEPS AFTER PUSH
+===============================================
+
+1. Visit your repository
+2. Add description and topics
+3. Create a release
+4. Add the .vsix file to releases
+5. Share with others!
+
+===============================================
+
+Repository: https://github.com/jangarohitha94/a11yassist-vscode
+Documentation: See GITHUB_PUSH_GUIDE.md for detailed instructions
+
+A11YAssist - Making VS Code accessible for everyone!
