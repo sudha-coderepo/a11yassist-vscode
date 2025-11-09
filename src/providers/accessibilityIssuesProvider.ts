@@ -20,6 +20,7 @@ export class AccessibilityIssuesProvider implements vscode.TreeDataProvider<Issu
         this._onDidChangeTreeData.event;
 
     private issues: AccessibilityIssue[] = [];
+    private expandedStates: Map<string, boolean> = new Map();
 
     /**
      * Update issues and refresh tree view
@@ -43,10 +44,12 @@ export class AccessibilityIssuesProvider implements vscode.TreeDataProvider<Issu
         if (!element) {
             // Root level - group by severity
             return Promise.resolve(this.getSeverityGroups());
-        } else if (element.contextValue === 'severity') {
+        } else if (element.contextValue === 'severity' && element.id) {
             // Show issues for this severity
-            const severity = element.label as AccessibilitySeverity;
+            // Extract severity from id: "severity-critical" -> "critical"
+            const severity = element.id.replace('severity-', '') as AccessibilitySeverity;
             const issuesForSeverity = this.issues.filter(i => i.severity === severity);
+            console.log(`Getting children for severity: ${severity}, found ${issuesForSeverity.length} issues`);
             return Promise.resolve(this.getIssueItems(issuesForSeverity));
         }
 
@@ -70,11 +73,15 @@ export class AccessibilityIssuesProvider implements vscode.TreeDataProvider<Issu
             const count = this.issues.filter(i => i.severity === severity).length;
 
             if (count > 0) {
+                const severityKey = `severity-${severity}`;
+                const isExpanded = this.expandedStates.get(severityKey) !== false;
+
                 const item = new IssueTreeItem(
                     `${this.formatSeverity(severity)} (${count})`,
-                    vscode.TreeItemCollapsibleState.Expanded
+                    isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed
                 );
                 item.contextValue = 'severity';
+                item.id = severityKey;
                 item.iconPath = new vscode.ThemeIcon(this.getSeverityIcon(severity));
                 groups.push(item);
             }
@@ -96,7 +103,7 @@ export class AccessibilityIssuesProvider implements vscode.TreeDataProvider<Issu
      * Get issue items for display
      */
     private getIssueItems(issues: AccessibilityIssue[]): IssueTreeItem[] {
-        return issues.map(issue => {
+        return issues.map((issue, index) => {
             const item = new IssueTreeItem(
                 issue.message,
                 vscode.TreeItemCollapsibleState.None
@@ -105,6 +112,7 @@ export class AccessibilityIssuesProvider implements vscode.TreeDataProvider<Issu
             item.description = `Line ${issue.line + 1}`;
             item.tooltip = `${issue.description}\n\nSuggestion: ${issue.suggestion}`;
             item.contextValue = 'issue';
+            item.id = `issue-${issue.id || index}`;
             item.iconPath = new vscode.ThemeIcon(this.getIssueIcon(issue));
 
             // Command to navigate to issue
@@ -156,6 +164,13 @@ export class AccessibilityIssuesProvider implements vscode.TreeDataProvider<Issu
     public clearIssues(): void {
         this.issues = [];
         this._onDidChangeTreeData.fire();
+    }
+
+    /**
+     * Set expanded state for a severity group
+     */
+    public setSeverityExpandedState(severityKey: string, isExpanded: boolean): void {
+        this.expandedStates.set(severityKey, isExpanded);
     }
 }
 

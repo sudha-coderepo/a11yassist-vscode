@@ -66,7 +66,7 @@ export class AccessibilityAuditor {
         // Determine file type and run appropriate audits
         const languageId = document.languageId;
 
-        vscode.window.withProgress({
+        await vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
             title: 'Running Accessibility Audit',
             cancellable: false
@@ -96,11 +96,9 @@ export class AccessibilityAuditor {
             issues.push(...await this.auditCommonIssues(document));
 
             progress.report({ increment: 20, message: 'Complete!' });
-
-            return issues;
         });
 
-        // Update diagnostics
+        // Update diagnostics after all audits complete
         this.updateDiagnostics(document, issues);
 
         return issues;

@@ -79,6 +79,11 @@
         "command": "a11yassist.describeElement",
         "title": "Describe Current Element",
         "category": "A11YAssist"
+      },
+      {
+        "command": "a11yassist.clearStatistics",
+        "title": "Clear Accessibility Statistics (Testing)",
+        "category": "A11YAssist"
       }
     ],
     "keybindings": [
@@ -115,7 +120,7 @@
         },
         "a11yassist.enableAnalytics": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Enable anonymous usage analytics to improve accessibility"
         },
         "a11yassist.highContrastMode": {
@@ -155,7 +160,7 @@
         {
           "id": "a11yassist-panel",
           "title": "A11YAssist",
-          "icon": "$(accessibility)"
+          "icon": "$(eye)"
         }
       ]
     },

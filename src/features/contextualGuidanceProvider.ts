@@ -38,7 +38,7 @@ export class ContextualGuidanceProvider {
      * Load configuration from workspace settings
      */
     private loadConfiguration(): ExtensionConfig {
-        const config = vscode.workspace.getConfiguration('accessibilityEnhancer');
+        const config = vscode.workspace.getConfiguration('a11yassist');
 
         return {
             enableScreenReaderEnhancements: config.get('enableScreenReaderEnhancements', true),
@@ -64,6 +64,7 @@ export class ContextualGuidanceProvider {
      */
     public async provideGuidance(editor: vscode.TextEditor): Promise<void> {
         if (!this.config.enableContextualGuidance) {
+            console.log('[Guidance] Contextual guidance is disabled');
             return;
         }
 
@@ -72,12 +73,22 @@ export class ContextualGuidanceProvider {
         const line = document.lineAt(position.line);
         const lineText = line.text;
 
+        console.log(`[Guidance] Analyzing line ${position.line + 1}: "${lineText.trim().substring(0, 60)}..."`);
+
         // Detect context and provide appropriate guidance
         this.currentGuidance = this.detectContext(lineText, document.languageId);
 
-        // Show guidance if cognitive load reduction is enabled
-        if (this.config.cognitiveLoadReduction && this.currentGuidance) {
-            this.showGuidanceNotification(this.currentGuidance);
+        // Show guidance notification if available (tree view always shows via updateGuidance)
+        if (this.currentGuidance) {
+            // Show notification if cognitive load reduction is enabled
+            if (this.config.cognitiveLoadReduction) {
+                console.log(`[Guidance] Showing notification for: ${this.currentGuidance.title}`);
+                this.showGuidanceNotification(this.currentGuidance);
+            }
+            // Log that guidance was found for debugging
+            console.log(`[Guidance] Contextual guidance detected for: ${this.currentGuidance.title}`);
+        } else {
+            console.log(`[Guidance] No guidance detected for line ${position.line + 1}`);
         }
     }
 
@@ -85,46 +96,57 @@ export class ContextualGuidanceProvider {
      * Detect context from line text and provide guidance
      */
     private detectContext(lineText: string, languageId: string): ContextualGuidance | null {
+        console.log(`[Guidance] Detecting context for language: ${languageId}`);
+
         // Image elements
-        if (/<img\s/.test(lineText)) {
+        if (/<img[\s>\/]/.test(lineText)) {
+            console.log(`[Guidance] Matched image pattern`);
             return this.getImageGuidance();
         }
 
         // Form elements
-        if (/<input\s|<select\s|<textarea\s/.test(lineText)) {
+        if (/<input[\s>\/]|<select[\s>\/]|<textarea[\s>\/]/.test(lineText)) {
+            console.log(`[Guidance] Matched form input pattern`);
             return this.getFormInputGuidance();
         }
 
         // Button elements
-        if (/<button\s/.test(lineText) || /onClick/.test(lineText)) {
+        if (/<button[\s>]/.test(lineText) || /onClick/.test(lineText)) {
+            console.log(`[Guidance] Matched button pattern`);
             return this.getButtonGuidance();
         }
 
         // Link elements
-        if (/<a\s/.test(lineText)) {
+        if (/<a[\s>\/]/.test(lineText)) {
+            console.log(`[Guidance] Matched link pattern`);
             return this.getLinkGuidance();
         }
 
-        // ARIA attributes
+        // ARIA attributes (check before other patterns)
         if (/aria-/.test(lineText)) {
+            console.log(`[Guidance] Matched ARIA pattern`);
             return this.getARIAGuidance();
         }
 
         // Heading elements
-        if (/<h[1-6]\s/.test(lineText)) {
+        if (/<h[1-6][\s>]/.test(lineText)) {
+            console.log(`[Guidance] Matched heading pattern`);
             return this.getHeadingGuidance();
         }
 
         // Color/CSS
         if ((languageId === 'css' || languageId === 'scss') && /color|background/.test(lineText)) {
+            console.log(`[Guidance] Matched color contrast pattern`);
             return this.getColorContrastGuidance();
         }
 
         // Tables
-        if (/<table\s/.test(lineText)) {
+        if (/<table[\s>\/]/.test(lineText)) {
+            console.log(`[Guidance] Matched table pattern`);
             return this.getTableGuidance();
         }
 
+        console.log(`[Guidance] No patterns matched for: "${lineText.trim().substring(0, 60)}"`);
         return null;
     }
 

@@ -56,8 +56,15 @@ class AccessibilityGuideProvider {
      * Update guidance and refresh tree view
      */
     updateGuidance(guidance) {
+        if (guidance) {
+            console.log(`[GuideProvider] Updating guidance: ${guidance.title}`);
+        }
+        else {
+            console.log(`[GuideProvider] Clearing guidance (null)`);
+        }
         this.currentGuidance = guidance;
         this._onDidChangeTreeData.fire();
+        console.log(`[GuideProvider] Tree view refreshed`);
     }
     /**
      * Get tree item

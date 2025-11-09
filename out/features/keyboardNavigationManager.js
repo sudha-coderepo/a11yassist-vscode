@@ -69,7 +69,7 @@ class KeyboardNavigationManager {
      * Load configuration from workspace settings
      */
     loadConfiguration() {
-        const config = vscode.workspace.getConfiguration('accessibilityEnhancer');
+        const config = vscode.workspace.getConfiguration('a11yassist');
         return {
             enableScreenReaderEnhancements: config.get('enableScreenReaderEnhancements', true),
             enableContextualGuidance: config.get('enableContextualGuidance', true),

@@ -42,8 +42,9 @@ export class AnalyticsManager {
      * Check if analytics are enabled in settings
      */
     private checkAnalyticsEnabled(): boolean {
-        const config = vscode.workspace.getConfiguration('accessibilityEnhancer');
-        return config.get('enableAnalytics', false);
+        const config = vscode.workspace.getConfiguration('a11yassist');
+        // Enable analytics by default to track usage statistics
+        return config.get('enableAnalytics', true);
     }
 
     /**
@@ -52,6 +53,21 @@ export class AnalyticsManager {
     private loadAnalyticsData(): void {
         this.events = this.context.globalState.get<AnalyticsEvent[]>('analyticsEvents', []);
         this.feedbackItems = this.context.globalState.get<UserFeedback[]>('feedbackItems', []);
+
+        // Log current statistics for debugging
+        const totalIssuesFound = this.context.globalState.get<number>('totalIssuesFound', 0);
+        const totalIssuesFixed = this.context.globalState.get<number>('totalIssuesFixed', 0);
+        const auditRunCount = this.events.filter(e => e.eventName === 'audit_run').length;
+        console.log(`[Analytics] Constructor - Loaded data from storage:
+        - Total Events: ${this.events.length}
+        - Audit Runs: ${auditRunCount}
+        - Issues Found: ${totalIssuesFound}
+        - Issues Fixed: ${totalIssuesFixed}
+        - Analytics Enabled: ${this.isAnalyticsEnabled}`);
+        if (this.events.length > 0) {
+            console.log(`[Analytics] First event: ${JSON.stringify(this.events[0])}`);
+            console.log(`[Analytics] Last event: ${JSON.stringify(this.events[this.events.length - 1])}`);
+        }
     }
 
     /**
@@ -67,8 +83,11 @@ export class AnalyticsManager {
      * @param eventName - Name of the event
      * @param properties - Optional event properties
      */
-    public trackEvent(eventName: string, properties?: Record<string, any>): void {
+    public async trackEvent(eventName: string, properties?: Record<string, any>): Promise<void> {
+        console.log(`[Analytics] trackEvent called with: ${eventName}`);
+
         if (!this.isAnalyticsEnabled) {
+            console.log(`[Analytics] Analytics disabled, skipping event`);
             return;
         }
 
@@ -79,14 +98,16 @@ export class AnalyticsManager {
         };
 
         this.events.push(event);
+        console.log(`[Analytics] Event added to in-memory array. Total events: ${this.events.length}`);
 
         // Keep only last 1000 events
         if (this.events.length > 1000) {
             this.events = this.events.slice(-1000);
         }
 
-        // Save asynchronously
-        this.saveAnalyticsData();
+        // Save and wait for completion
+        await this.saveAnalyticsData();
+        console.log(`[Analytics] Event tracked and saved: ${eventName}. Total audits so far: ${this.events.filter(e => e.eventName === 'audit_run').length}`);
     }
 
     /**
@@ -118,6 +139,8 @@ export class AnalyticsManager {
      * Get usage statistics
      */
     public getUsageStatistics(): UsageStatistics {
+        console.log(`[Analytics] getUsageStatistics called. Total events in memory: ${this.events.length}`);
+
         // Count feature usage
         const featuresUsed: Record<string, number> = {};
 
@@ -137,6 +160,9 @@ export class AnalyticsManager {
         const lastEvent = this.events[this.events.length - 1];
         const lastUsed = lastEvent ? lastEvent.timestamp : new Date().toISOString();
 
+        console.log(`[Analytics] Stats - Audits: ${totalAuditsRun}, Issues Found: ${totalIssuesFound}, Issues Fixed: ${totalIssuesFixed}`);
+        console.log(`[Analytics] Feature usage: ${JSON.stringify(featuresUsed)}`);
+
         return {
             totalAuditsRun,
             totalIssuesFound,
@@ -147,20 +173,68 @@ export class AnalyticsManager {
     }
 
     /**
+     * Set total issues found (for tracking baseline)
+     */
+    public async setTotalIssuesFound(count: number): Promise<void> {
+        await this.context.globalState.update('totalIssuesFound', count);
+        console.log(`Total issues found set to: ${count}`);
+    }
+
+    /**
      * Increment issues found counter
      */
-    public incrementIssuesFound(count: number): void {
+    public async incrementIssuesFound(count: number): Promise<void> {
         const current = this.context.globalState.get<number>('totalIssuesFound', 0);
-        this.context.globalState.update('totalIssuesFound', current + count);
+        await this.context.globalState.update('totalIssuesFound', current + count);
+        console.log(`Issues found incremented by ${count}, total: ${current + count}`);
     }
 
     /**
      * Increment issues fixed counter
+     * @param count - Number of issues fixed (default 1)
      */
-    public incrementIssuesFixed(): void {
+    public async incrementIssuesFixed(count: number = 1): Promise<void> {
         const current = this.context.globalState.get<number>('totalIssuesFixed', 0);
-        this.context.globalState.update('totalIssuesFixed', current + 1);
-        this.trackEvent('issue_fixed');
+        await this.context.globalState.update('totalIssuesFixed', current + count);
+        await this.trackEvent('issue_fixed', { count });
+        console.log(`Issues fixed incremented by ${count}, total: ${current + count}`);
+    }
+
+    /**
+     * Decrement issues fixed counter (when fixes are reverted)
+     * @param count - Number of issues to decrement
+     */
+    public async decrementIssuesFixed(count: number = 1): Promise<void> {
+        const current = this.context.globalState.get<number>('totalIssuesFixed', 0);
+        const newCount = Math.max(0, current - count); // Don't go below 0
+        await this.context.globalState.update('totalIssuesFixed', newCount);
+        console.log(`Issues fixed decremented by ${count}, total: ${newCount}`);
+    }
+
+    /**
+     * Get last audit issue count
+     */
+    public async getLastAuditCount(): Promise<number> {
+        return this.context.globalState.get<number>('lastAuditCount', 0);
+    }
+
+    /**
+     * Set last audit issue count
+     */
+    public async setLastAuditCount(count: number): Promise<void> {
+        await this.context.globalState.update('lastAuditCount', count);
+        console.log(`Last audit count set to: ${count}`);
+    }
+
+    /**
+     * Reset statistics (for debugging or user request)
+     */
+    public async resetStatistics(): Promise<void> {
+        await this.context.globalState.update('totalIssuesFound', 0);
+        await this.context.globalState.update('totalIssuesFixed', 0);
+        this.events = [];
+        await this.saveAnalyticsData();
+        console.log('[Analytics] Statistics reset');
     }
 
     /**

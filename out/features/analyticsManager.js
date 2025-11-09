@@ -70,8 +70,9 @@ class AnalyticsManager {
      * Check if analytics are enabled in settings
      */
     checkAnalyticsEnabled() {
-        const config = vscode.workspace.getConfiguration('accessibilityEnhancer');
-        return config.get('enableAnalytics', false);
+        const config = vscode.workspace.getConfiguration('a11yassist');
+        // Enable analytics by default to track usage statistics
+        return config.get('enableAnalytics', true);
     }
     /**
      * Load analytics data from storage
@@ -79,6 +80,20 @@ class AnalyticsManager {
     loadAnalyticsData() {
         this.events = this.context.globalState.get('analyticsEvents', []);
         this.feedbackItems = this.context.globalState.get('feedbackItems', []);
+        // Log current statistics for debugging
+        const totalIssuesFound = this.context.globalState.get('totalIssuesFound', 0);
+        const totalIssuesFixed = this.context.globalState.get('totalIssuesFixed', 0);
+        const auditRunCount = this.events.filter(e => e.eventName === 'audit_run').length;
+        console.log(`[Analytics] Constructor - Loaded data from storage:
+        - Total Events: ${this.events.length}
+        - Audit Runs: ${auditRunCount}
+        - Issues Found: ${totalIssuesFound}
+        - Issues Fixed: ${totalIssuesFixed}
+        - Analytics Enabled: ${this.isAnalyticsEnabled}`);
+        if (this.events.length > 0) {
+            console.log(`[Analytics] First event: ${JSON.stringify(this.events[0])}`);
+            console.log(`[Analytics] Last event: ${JSON.stringify(this.events[this.events.length - 1])}`);
+        }
     }
     /**
      * Save analytics data to storage
@@ -92,8 +107,10 @@ class AnalyticsManager {
      * @param eventName - Name of the event
      * @param properties - Optional event properties
      */
-    trackEvent(eventName, properties) {
+    async trackEvent(eventName, properties) {
+        console.log(`[Analytics] trackEvent called with: ${eventName}`);
         if (!this.isAnalyticsEnabled) {
+            console.log(`[Analytics] Analytics disabled, skipping event`);
             return;
         }
         const event = {
@@ -102,12 +119,14 @@ class AnalyticsManager {
             properties
         };
         this.events.push(event);
+        console.log(`[Analytics] Event added to in-memory array. Total events: ${this.events.length}`);
         // Keep only last 1000 events
         if (this.events.length > 1000) {
             this.events = this.events.slice(-1000);
         }
-        // Save asynchronously
-        this.saveAnalyticsData();
+        // Save and wait for completion
+        await this.saveAnalyticsData();
+        console.log(`[Analytics] Event tracked and saved: ${eventName}. Total audits so far: ${this.events.filter(e => e.eventName === 'audit_run').length}`);
     }
     /**
      * Submit user feedback
@@ -133,6 +152,7 @@ class AnalyticsManager {
      * Get usage statistics
      */
     getUsageStatistics() {
+        console.log(`[Analytics] getUsageStatistics called. Total events in memory: ${this.events.length}`);
         // Count feature usage
         const featuresUsed = {};
         for (const event of this.events) {
@@ -148,6 +168,8 @@ class AnalyticsManager {
         // Get last used date
         const lastEvent = this.events[this.events.length - 1];
         const lastUsed = lastEvent ? lastEvent.timestamp : new Date().toISOString();
+        console.log(`[Analytics] Stats - Audits: ${totalAuditsRun}, Issues Found: ${totalIssuesFound}, Issues Fixed: ${totalIssuesFixed}`);
+        console.log(`[Analytics] Feature usage: ${JSON.stringify(featuresUsed)}`);
         return {
             totalAuditsRun,
             totalIssuesFound,
@@ -157,19 +179,62 @@ class AnalyticsManager {
         };
     }
     /**
+     * Set total issues found (for tracking baseline)
+     */
+    async setTotalIssuesFound(count) {
+        await this.context.globalState.update('totalIssuesFound', count);
+        console.log(`Total issues found set to: ${count}`);
+    }
+    /**
      * Increment issues found counter
      */
-    incrementIssuesFound(count) {
+    async incrementIssuesFound(count) {
         const current = this.context.globalState.get('totalIssuesFound', 0);
-        this.context.globalState.update('totalIssuesFound', current + count);
+        await this.context.globalState.update('totalIssuesFound', current + count);
+        console.log(`Issues found incremented by ${count}, total: ${current + count}`);
     }
     /**
      * Increment issues fixed counter
+     * @param count - Number of issues fixed (default 1)
      */
-    incrementIssuesFixed() {
+    async incrementIssuesFixed(count = 1) {
         const current = this.context.globalState.get('totalIssuesFixed', 0);
-        this.context.globalState.update('totalIssuesFixed', current + 1);
-        this.trackEvent('issue_fixed');
+        await this.context.globalState.update('totalIssuesFixed', current + count);
+        await this.trackEvent('issue_fixed', { count });
+        console.log(`Issues fixed incremented by ${count}, total: ${current + count}`);
+    }
+    /**
+     * Decrement issues fixed counter (when fixes are reverted)
+     * @param count - Number of issues to decrement
+     */
+    async decrementIssuesFixed(count = 1) {
+        const current = this.context.globalState.get('totalIssuesFixed', 0);
+        const newCount = Math.max(0, current - count); // Don't go below 0
+        await this.context.globalState.update('totalIssuesFixed', newCount);
+        console.log(`Issues fixed decremented by ${count}, total: ${newCount}`);
+    }
+    /**
+     * Get last audit issue count
+     */
+    async getLastAuditCount() {
+        return this.context.globalState.get('lastAuditCount', 0);
+    }
+    /**
+     * Set last audit issue count
+     */
+    async setLastAuditCount(count) {
+        await this.context.globalState.update('lastAuditCount', count);
+        console.log(`Last audit count set to: ${count}`);
+    }
+    /**
+     * Reset statistics (for debugging or user request)
+     */
+    async resetStatistics() {
+        await this.context.globalState.update('totalIssuesFound', 0);
+        await this.context.globalState.update('totalIssuesFixed', 0);
+        this.events = [];
+        await this.saveAnalyticsData();
+        console.log('[Analytics] Statistics reset');
     }
     /**
      * Get all events

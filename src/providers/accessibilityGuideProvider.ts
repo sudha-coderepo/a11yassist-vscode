@@ -25,8 +25,14 @@ export class AccessibilityGuideProvider implements vscode.TreeDataProvider<Guide
      * Update guidance and refresh tree view
      */
     public updateGuidance(guidance: ContextualGuidance | null): void {
+        if (guidance) {
+            console.log(`[GuideProvider] Updating guidance: ${guidance.title}`);
+        } else {
+            console.log(`[GuideProvider] Clearing guidance (null)`);
+        }
         this.currentGuidance = guidance;
         this._onDidChangeTreeData.fire();
+        console.log(`[GuideProvider] Tree view refreshed`);
     }
 
     /**

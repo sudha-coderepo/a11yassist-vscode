@@ -52,6 +52,7 @@ class AccessibilityIssuesProvider {
         this._onDidChangeTreeData = new vscode.EventEmitter();
         this.onDidChangeTreeData = this._onDidChangeTreeData.event;
         this.issues = [];
+        this.expandedStates = new Map();
     }
     /**
      * Update issues and refresh tree view
@@ -74,10 +75,12 @@ class AccessibilityIssuesProvider {
             // Root level - group by severity
             return Promise.resolve(this.getSeverityGroups());
         }
-        else if (element.contextValue === 'severity') {
+        else if (element.contextValue === 'severity' && element.id) {
             // Show issues for this severity
-            const severity = element.label;
+            // Extract severity from id: "severity-critical" -> "critical"
+            const severity = element.id.replace('severity-', '');
             const issuesForSeverity = this.issues.filter(i => i.severity === severity);
+            console.log(`Getting children for severity: ${severity}, found ${issuesForSeverity.length} issues`);
             return Promise.resolve(this.getIssueItems(issuesForSeverity));
         }
         return Promise.resolve([]);
@@ -96,8 +99,11 @@ class AccessibilityIssuesProvider {
         for (const severity of severities) {
             const count = this.issues.filter(i => i.severity === severity).length;
             if (count > 0) {
-                const item = new IssueTreeItem(`${this.formatSeverity(severity)} (${count})`, vscode.TreeItemCollapsibleState.Expanded);
+                const severityKey = `severity-${severity}`;
+                const isExpanded = this.expandedStates.get(severityKey) !== false;
+                const item = new IssueTreeItem(`${this.formatSeverity(severity)} (${count})`, isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed);
                 item.contextValue = 'severity';
+                item.id = severityKey;
                 item.iconPath = new vscode.ThemeIcon(this.getSeverityIcon(severity));
                 groups.push(item);
             }
@@ -113,11 +119,12 @@ class AccessibilityIssuesProvider {
      * Get issue items for display
      */
     getIssueItems(issues) {
-        return issues.map(issue => {
+        return issues.map((issue, index) => {
             const item = new IssueTreeItem(issue.message, vscode.TreeItemCollapsibleState.None);
             item.description = `Line ${issue.line + 1}`;
             item.tooltip = `${issue.description}\n\nSuggestion: ${issue.suggestion}`;
             item.contextValue = 'issue';
+            item.id = `issue-${issue.id || index}`;
             item.iconPath = new vscode.ThemeIcon(this.getIssueIcon(issue));
             // Command to navigate to issue
             item.command = {
@@ -163,6 +170,12 @@ class AccessibilityIssuesProvider {
     clearIssues() {
         this.issues = [];
         this._onDidChangeTreeData.fire();
+    }
+    /**
+     * Set expanded state for a severity group
+     */
+    setSeverityExpandedState(severityKey, isExpanded) {
+        this.expandedStates.set(severityKey, isExpanded);
     }
 }
 exports.AccessibilityIssuesProvider = AccessibilityIssuesProvider;

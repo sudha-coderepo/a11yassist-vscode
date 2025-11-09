@@ -62,7 +62,7 @@ export class ScreenReaderManager {
      * Load configuration from workspace settings
      */
     private loadConfiguration(): ExtensionConfig {
-        const config = vscode.workspace.getConfiguration('accessibilityEnhancer');
+        const config = vscode.workspace.getConfiguration('a11yassist');
 
         return {
             enableScreenReaderEnhancements: config.get('enableScreenReaderEnhancements', true),
