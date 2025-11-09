@@ -1,7 +1,7 @@
 /**
  * Accessibility Stats Provider (Tree View)
  *
- * @author Sudha Rajendran and Rohitha Janga
+ * @author Sudha Rajendran
  * @institution Ontario Tech University
  * @description Tree view provider for displaying usage statistics and analytics
  */

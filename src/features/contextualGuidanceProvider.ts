@@ -1,7 +1,7 @@
 /**
  * Contextual Guidance Provider
  *
- * @author Sudha Rajendran and Rohitha Janga
+ * @author Sudha Rajendran
  * @institution Ontario Tech University
  * @description Provides context-aware accessibility guidance and recommendations
  *

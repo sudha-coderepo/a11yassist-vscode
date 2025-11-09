@@ -1,7 +1,7 @@
 /**
  * Type Definitions and Interfaces for A11YAssist extension
  *
- * @author Sudha Rajendran and Rohitha Janga
+ * @author Sudha Rajendran
  * @institution Ontario Tech University
  * @description Comprehensive type definitions for accessibility features
  */

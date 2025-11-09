@@ -1,7 +1,7 @@
 /**
  * Screen Reader Manager
  *
- * @author Sudha Rajendran and Rohitha Janga
+ * @author Sudha Rajendran
  * @institution Ontario Tech University
  * @description Manages screen reader compatibility and announcements for visually impaired users
  *

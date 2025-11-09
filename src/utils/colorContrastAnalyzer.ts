@@ -1,7 +1,7 @@
 /**
  * Color Contrast Analyzer Utility
  *
- * @author Sudha Rajendran and Rohitha Janga
+ * @author Sudha Rajendran
  * @institution Ontario Tech University
  * @description Analyzes color contrast ratios according to WCAG 2.1 guidelines
  */

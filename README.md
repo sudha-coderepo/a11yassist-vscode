@@ -1,6 +1,6 @@
 # A11YAssist - Accessibility Assistant for VS Code
 
-**Authors:** Sudha Rajendran and Rohitha Janga
+**Authors:** Sudha Rajendran
 **Institution:** Ontario Tech University
 **Version:** 1.0.0
 
@@ -309,15 +309,12 @@ See [LICENSE](LICENSE) file for details.
 
 **Sudha Rajendran**
 Ontario Tech University
-Email: sudha.rajendran@ontariotechu.ca
-
-**Rohitha Janga**
-Ontario Tech University
+Email: sudha.rajendran@ontariotechu.net
 
 ## 💬 Support
 
 - Use the "Provide Accessibility Feedback" command in VS Code
-- Email: sudha.rajendran@ontariotechu.ca
+- Email: sudha.rajendran@ontariotechu.net
 - Check documentation files for detailed guides
 
 ## 🙏 Acknowledgments
@@ -332,6 +329,6 @@ This project addresses accessibility gaps in modern IDEs and supports inclusive 
 
 **A11YAssist** - Your Accessibility Assistant
 
-[Install](WINDOWS_INSTALL.md) | [Quick Start](QUICK_START.md) | [Documentation](SETUP_GUIDE.md) | [Report Issue](mailto:sudha.rajendran@ontariotechu.ca)
+[Install](WINDOWS_INSTALL.md) | [Quick Start](QUICK_START.md) | [Documentation](SETUP_GUIDE.md) | [Report Issue](mailto:sudha.rajendran@ontariotechu.net)
 
 </div>

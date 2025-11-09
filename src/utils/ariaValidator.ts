@@ -1,7 +1,7 @@
 /**
  * ARIA Validator Utility
  *
- * @author Sudha Rajendran and Rohitha Janga
+ * @author Sudha Rajendran
  * @institution Ontario Tech University
  * @description Validates ARIA attributes and roles according to WAI-ARIA 1.2 specification
  */

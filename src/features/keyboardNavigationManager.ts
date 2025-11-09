@@ -1,7 +1,7 @@
 /**
  * Keyboard Navigation Manager
  *
- * @author Sudha Rajendran and Rohitha Janga
+ * @author Sudha Rajendran
  * @institution Ontario Tech University
  * @description Manages enhanced keyboard navigation for users with motor limitations
  *

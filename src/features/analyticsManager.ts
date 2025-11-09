@@ -1,7 +1,7 @@
 /**
  * Analytics Manager
  *
- * @author Sudha Rajendran and Rohitha Janga
+ * @author Sudha Rajendran
  * @institution Ontario Tech University
  * @description Manages usage analytics and feedback collection for empirical research
  *
