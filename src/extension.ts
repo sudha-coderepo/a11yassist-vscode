@@ -234,6 +234,15 @@ export function activate(context: vscode.ExtensionContext) {
         }
     );
 
+    // Export Feedback
+    const exportFeedbackCommand = vscode.commands.registerCommand(
+        'a11yassist.exportFeedback',
+        async () => {
+            await analyticsManager.trackEvent('feedback_exported');
+            await exportFeedbackToFile(analyticsManager);
+        }
+    );
+
     // Add all commands to subscriptions
     context.subscriptions.push(
         runAuditCommand,
@@ -245,7 +254,8 @@ export function activate(context: vscode.ExtensionContext) {
         describeElementCommand,
         navigateToIssueCommand,
         showAnalyticsSummaryCommand,
-        clearStatisticsCommand
+        clearStatisticsCommand,
+        exportFeedbackCommand
     );
 
     // Listen to configuration changes
@@ -283,7 +293,338 @@ export function activate(context: vscode.ExtensionContext) {
     showWelcomeMessage(context);
 }
 
-async function showFeedbackForm(context: vscode.ExtensionContext, analyticsManager: AnalyticsManager) {
+async function exportFeedbackToFile(analyticsManager: AnalyticsManager) {
+    const feedbackItems = analyticsManager.getFeedback();
+    const stats = analyticsManager.getUsageStatistics();
+
+    if (feedbackItems.length === 0) {
+        vscode.window.showInformationMessage(
+            'No feedback collected yet. Submit feedback using "Provide Accessibility Feedback" command.'
+        );
+        return;
+    }
+
+    // Ask user to choose export format
+    const format = await vscode.window.showQuickPick(
+        [
+            { label: 'JSON', description: 'Machine-readable format (recommended for research)' },
+            { label: 'CSV', description: 'Spreadsheet-compatible format' },
+            { label: 'HTML', description: 'Human-readable format for email' }
+        ],
+        {
+            placeHolder: 'Choose export format',
+            title: `Export ${feedbackItems.length} feedback item(s)`
+        }
+    );
+
+    if (!format) {
+        return;
+    }
+
+    let fileContent: string;
+    let fileExtension: string;
+
+    switch (format.label) {
+        case 'JSON':
+            fileContent = formatFeedbackAsJSON(feedbackItems, stats);
+            fileExtension = 'json';
+            break;
+        case 'CSV':
+            fileContent = formatFeedbackAsCSV(feedbackItems, stats);
+            fileExtension = 'csv';
+            break;
+        case 'HTML':
+            fileContent = formatFeedbackAsHTML(feedbackItems, stats);
+            fileExtension = 'html';
+            break;
+        default:
+            return;
+    }
+
+    // Generate filename with timestamp
+    const timestamp = new Date().toISOString().split('T')[0];
+    const defaultFileName = `a11yassist-feedback-${timestamp}.${fileExtension}`;
+
+    const fileUri = await vscode.window.showSaveDialog({
+        defaultUri: vscode.Uri.file(defaultFileName),
+        filters: {
+            [format.label]: [fileExtension],
+            'All Files': ['*']
+        },
+        title: `Export feedback as ${format.label}`
+    });
+
+    if (fileUri) {
+        try {
+            await vscode.workspace.fs.writeFile(
+                fileUri,
+                new TextEncoder().encode(fileContent)
+            );
+
+            const message = `Feedback exported successfully! (${feedbackItems.length} items)\n\nFile: ${fileUri.fsPath}\n\nTo send via email:\n1. Open the exported file\n2. Send to: sudha.rajendran@ontariotechu.net`;
+
+            vscode.window.showInformationMessage(message);
+            console.log(`[Extension] Feedback exported to: ${fileUri.fsPath}`);
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to export feedback: ${error}`);
+            console.error('[Extension] Export failed:', error);
+        }
+    }
+}
+
+function formatFeedbackAsJSON(feedbackItems: any[], stats: any): string {
+    const exportData = {
+        exportDate: new Date().toISOString(),
+        extensionVersion: vscode.extensions.getExtension('ontario-tech-university.a11yassist')?.packageJSON.version || 'unknown',
+        totalFeedbackItems: feedbackItems.length,
+        usageStatistics: stats,
+        feedbackItems: feedbackItems
+    };
+
+    return JSON.stringify(exportData, null, 2);
+}
+
+function formatFeedbackAsCSV(feedbackItems: any[], stats: any): string {
+    const headers = ['Feedback Type', 'Content', 'Timestamp', 'Platform', 'Extension Version'];
+    const rows = feedbackItems.map(item => [
+        `"${(item.type || '').replace(/"/g, '""')}"`,
+        `"${(item.content || '').replace(/"/g, '""')}"`,
+        `"${item.timestamp || ''}"`,
+        `"${item.userAgent || ''}"`,
+        `"${item.extensionVersion || ''}"`
+    ]);
+
+    const csvContent = [
+        headers.join(','),
+        '',
+        '# Usage Statistics',
+        `Total Audits Run,${stats.totalAuditsRun}`,
+        `Total Issues Found,${stats.totalIssuesFound}`,
+        `Total Issues Fixed,${stats.totalIssuesFixed}`,
+        `Export Date,${new Date().toISOString()}`,
+        '',
+        '# Feedback Data',
+        ...rows.map(row => row.join(','))
+    ].join('\n');
+
+    return csvContent;
+}
+
+function formatFeedbackAsHTML(feedbackItems: any[], stats: any): string {
+    const feedbackRows = feedbackItems.map(item => `
+        <tr>
+            <td>${escapeHtml(item.type || '')}</td>
+            <td>${escapeHtml(item.content || '')}</td>
+            <td>${item.timestamp || ''}</td>
+            <td>${escapeHtml(item.userAgent || '')}</td>
+            <td>${escapeHtml(item.extensionVersion || '')}</td>
+        </tr>
+    `).join('');
+
+    const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A11YAssist Feedback Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0078d4;
+            border-bottom: 3px solid #0078d4;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #0078d4;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .stat-card .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .info-box {
+            background-color: #f0f8ff;
+            border-left: 4px solid #0078d4;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info-box strong {
+            color: #0078d4;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        thead {
+            background-color: #f0f0f0;
+        }
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+            background-color: #f0f0f0;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+        .feedback-type-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        .bug {
+            background-color: #fee;
+            color: #d00;
+        }
+        .feature {
+            background-color: #efe;
+            color: #0a0;
+        }
+        .general {
+            background-color: #eef;
+            color: #00a;
+        }
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .email-instruction {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 A11YAssist Feedback Report</h1>
+
+        <div class="info-box">
+            <strong>Export Date:</strong> ${new Date().toLocaleString()}<br>
+            <strong>Total Feedback Items:</strong> ${feedbackItems.length}
+        </div>
+
+        <h2>📊 Usage Statistics</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Total Audits Run</div>
+                <div class="value">${stats.totalAuditsRun}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Total Issues Found</div>
+                <div class="value">${stats.totalIssuesFound}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Total Issues Fixed</div>
+                <div class="value">${stats.totalIssuesFixed}</div>
+            </div>
+        </div>
+
+        <div class="email-instruction">
+            <strong>📧 To send this feedback via email:</strong><br>
+            Send this file to: <strong>sudha.rajendran@ontariotechu.net</strong><br>
+            Subject: <em>A11YAssist Feedback Report - ${new Date().toLocaleDateString()}</em>
+        </div>
+
+        <h2>💬 Feedback Items (${feedbackItems.length})</h2>
+        ${feedbackItems.length > 0 ? `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Content</th>
+                        <th>Timestamp</th>
+                        <th>Platform</th>
+                        <th>Extension Version</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${feedbackRows}
+                </tbody>
+            </table>
+        ` : '<p>No feedback items to display.</p>'}
+
+        <footer>
+            <p>Generated by <strong>A11YAssist</strong> - Accessibility Assistant for VS Code</p>
+            <p>Version: ${vscode.extensions.getExtension('ontario-tech-university.a11yassist')?.packageJSON.version || 'unknown'}</p>
+        </footer>
+    </div>
+</body>
+</html>
+    `;
+
+    return html;
+}
+
+function escapeHtml(text: string): string {
+    const map: Record<string, string> = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+async function showFeedbackForm(_context: vscode.ExtensionContext, analyticsManager: AnalyticsManager) {
     const feedbackType = await vscode.window.showQuickPick(
         [
             { label: 'Bug Report', description: 'Report an accessibility issue' },

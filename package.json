@@ -84,6 +84,11 @@
         "command": "a11yassist.clearStatistics",
         "title": "Clear Accessibility Statistics (Testing)",
         "category": "A11YAssist"
+      },
+      {
+        "command": "a11yassist.exportFeedback",
+        "title": "Export Feedback (JSON/CSV/HTML)",
+        "category": "A11YAssist"
       }
     ],
     "keybindings": [
