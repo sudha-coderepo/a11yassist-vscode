@@ -1,0 +1,53 @@
+# Node modules
+node_modules/
+yarn.lock
+
+# Compiled output
+out/
+dist/
+build/
+
+# VSCode settings
+.vscode/
+*.code-workspace
+
+# IDE and editor files
+.idea/
+.DS_Store
+*.swp
+*.swo
+*~
+.env
+.env.local
+
+# Testing
+coverage/
+.nyc_output/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+.temp/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Documentation and notes (test files)
+ACCESSIBILITY_AUDIT_VS_HTML_DEBUG.md
+QUICK_REFERENCE_AUDIT.md
+sample.html
+README_OLD.md
+
+# Extension package
+*.vsix
+
+# Backup files
+*.bak
+*.backup

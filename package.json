@@ -1,0 +1,208 @@
+{
+  "name": "a11yassist",
+  "displayName": "A11YAssist",
+  "description": "Comprehensive accessibility assistant for VSCode with screen reader support, keyboard navigation, and contextual guidance for developers with disabilities",
+  "version": "1.0.0",
+  "publisher": "ontario-tech-university",
+  "author": {
+    "name": "Sudha Rajendran",
+    "email": "sudha.rajendran@ontariotechu.net",
+    "url": "https://ontariotechu.ca"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sudha-coderepo/a11yassist-vscode"
+  },
+  "bugs": {
+    "url": "https://github.com/sudha-coderepo/a11yassist-vscode/issues"
+  },
+  "homepage": "https://github.com/sudha-coderepo/a11yassist-vscode#readme",
+  "license": "MIT",
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "a11yassist",
+    "screen reader",
+    "keyboard navigation",
+    "ARIA",
+    "WCAG",
+    "inclusive design",
+    "visual impairment",
+    "motor limitations",
+    "cognitive accessibility",
+    "assistive technology"
+  ],
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other",
+    "Accessibility"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "a11yassist.runAudit",
+        "title": "Run Accessibility Audit",
+        "category": "A11YAssist"
+      },
+      {
+        "command": "a11yassist.showKeyboardShortcuts",
+        "title": "Show Keyboard Navigation Guide",
+        "category": "A11YAssist"
+      },
+      {
+        "command": "a11yassist.toggleScreenReaderMode",
+        "title": "Toggle Enhanced Screen Reader Mode",
+        "category": "A11YAssist"
+      },
+      {
+        "command": "a11yassist.provideFeedback",
+        "title": "Provide Accessibility Feedback",
+        "category": "A11YAssist"
+      },
+      {
+        "command": "a11yassist.showAccessibilityPanel",
+        "title": "Show A11YAssist Panel",
+        "category": "A11YAssist"
+      },
+      {
+        "command": "a11yassist.announceCurrentContext",
+        "title": "Announce Current Context (Screen Reader)",
+        "category": "A11YAssist"
+      },
+      {
+        "command": "a11yassist.describeElement",
+        "title": "Describe Current Element",
+        "category": "A11YAssist"
+      },
+      {
+        "command": "a11yassist.clearStatistics",
+        "title": "Clear Accessibility Statistics (Testing)",
+        "category": "A11YAssist"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "a11yassist.runAudit",
+        "key": "ctrl+shift+a",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "a11yassist.showKeyboardShortcuts",
+        "key": "ctrl+shift+k"
+      },
+      {
+        "command": "a11yassist.announceCurrentContext",
+        "key": "ctrl+shift+c"
+      },
+      {
+        "command": "a11yassist.describeElement",
+        "key": "ctrl+shift+d"
+      }
+    ],
+    "configuration": {
+      "title": "A11YAssist",
+      "properties": {
+        "a11yassist.enableScreenReaderEnhancements": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable enhanced screen reader support"
+        },
+        "a11yassist.enableContextualGuidance": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show contextual accessibility guidance"
+        },
+        "a11yassist.enableAnalytics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable anonymous usage analytics to improve accessibility"
+        },
+        "a11yassist.highContrastMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable high contrast mode for better visibility"
+        },
+        "a11yassist.verbosityLevel": {
+          "type": "string",
+          "enum": [
+            "minimal",
+            "normal",
+            "verbose"
+          ],
+          "default": "normal",
+          "description": "Screen reader verbosity level"
+        },
+        "a11yassist.enableKeyboardNavigation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable enhanced keyboard navigation features"
+        },
+        "a11yassist.announceEditorChanges": {
+          "type": "boolean",
+          "default": true,
+          "description": "Announce editor changes to screen readers"
+        },
+        "a11yassist.cognitiveLoadReduction": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable features to reduce cognitive load"
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "a11yassist-panel",
+          "title": "A11YAssist",
+          "icon": "$(eye)"
+        }
+      ]
+    },
+    "views": {
+      "a11yassist-panel": [
+        {
+          "id": "a11yassistIssues",
+          "name": "Accessibility Issues"
+        },
+        {
+          "id": "a11yassistGuide",
+          "name": "Contextual Guidance"
+        },
+        {
+          "id": "a11yassistStats",
+          "name": "Usage Statistics"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "lint:fix": "eslint src --ext ts --fix",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package",
+    "publish": "vsce publish",
+    "clean": "rimraf out",
+    "rebuild": "npm run clean && npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.75.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "axe-core": "^4.7.0"
+  }
+}

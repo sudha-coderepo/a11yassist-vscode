@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A11YAssist - Comprehensive Accessibility Test Suite</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        h2 {
+            color: #666;
+            margin-top: 20px;
+        }
+
+        /* Low contrast text - WCAG AA failure */
+        .low-contrast {
+            color: #777;
+            background-color: #999;
+        }
+
+        /* Good contrast */
+        .good-contrast {
+            color: #000;
+            background-color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            padding: 8px;
+            border: 1px solid #999;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #0052a3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>A11YAssist Accessibility Test Suite</h1>
+    <p>This page contains various accessibility issues to test the A11YAssist extension.</p>
+
+    <!-- ========================================
+         HOW TO USE THIS FILE:
+
+         1. OPEN THIS FILE (sample.html)
+         2. CHECK PROBLEMS PANEL (Ctrl+Shift+M)
+            - You should see NO errors initially
+            - This is VALID HTML (no syntax errors)
+
+         3. RUN ACCESSIBILITY AUDIT (Ctrl+Shift+A)
+            - You should see ~12-15 ACCESSIBILITY issues
+            - These are WCAG compliance issues, NOT syntax errors
+
+         4. COMPARE:
+            HTML Debug (Automatic) = Syntax & structure
+            Accessibility Audit (Manual) = WCAG compliance & best practices
+
+         5. VIEW RESULTS IN TWO PLACES:
+            a) Problems Panel (Ctrl+Shift+M) - shows "[Accessibility Enhancer]" prefix
+            b) A11YAssist Panel (♿ icon on left sidebar) - detailed view
+
+         ======================================== -->
+
+    <!-- ISSUE 1: Missing alt text on images -->
+    <div class="section">
+        <h2>1. Image Accessibility Issues</h2>
+
+        <!-- FAIL: No alt attribute -->
+        <img src="test-image.jpg" width="200" height="150">
+        <p>↑ Image without alt attribute (CRITICAL)</p>
+
+        <!-- FAIL: Empty alt attribute on decorative image -->
+        <img src="decorative.png" alt="" width="100" height="100">
+        <p>↑ Decorative image with empty alt (OK for decorative images)</p>
+
+        <!-- PASS: Good alt text -->
+        <img src="good-image.jpg" alt="A person working on accessibility" width="200" height="150">
+        <p>↑ Image with good descriptive alt text (PASS)</p>
+    </div>
+
+    <!-- ISSUE 2: Form accessibility issues -->
+    <div class="section">
+        <h2>2. Form Accessibility Issues</h2>
+
+        <!-- FAIL: Input without label -->
+        <input type="text" placeholder="Search..." />
+        <p>↑ Input without associated label (SERIOUS)</p>
+
+        <!-- FAIL: Input without aria-label or id -->
+        <input type="email" />
+        <p>↑ Email input without label or aria-label (SERIOUS)</p>
+
+        <!-- PASS: Input with proper label -->
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username">
+        </div>
+        <p>↑ Input with proper associated label (PASS)</p>
+
+        <!-- PASS: Input with aria-label -->
+        <div class="form-group">
+            <input type="text" aria-label="Enter your full name" placeholder="Full Name">
+        </div>
+        <p>↑ Input with aria-label (PASS)</p>
+
+        <!-- FAIL: Textarea without label -->
+        <textarea placeholder="Enter your message here..."></textarea>
+        <p>↑ Textarea without label (SERIOUS)</p>
+
+        <!-- PASS: Select with label -->
+        <div class="form-group">
+            <label for="country">Country:</label>
+            <select id="country" name="country">
+                <option value="">Select a country</option>
+                <option value="usa">United States</option>
+                <option value="canada">Canada</option>
+                <option value="uk">United Kingdom</option>
+            </select>
+        </div>
+        <p>↑ Select with proper label (PASS)</p>
+    </div>
+
+    <!-- ISSUE 3: Button accessibility issues -->
+    <div class="section">
+        <h2>3. Button Accessibility Issues</h2>
+
+        <!-- FAIL: Empty button -->
+        <button></button>
+        <p>↑ Empty button with no text (CRITICAL)</p>
+
+        <!-- FAIL: Button with only icon, no aria-label -->
+        <button>⭐</button>
+        <p>↑ Button with only icon symbol, no accessible name (CRITICAL)</p>
+
+        <!-- PASS: Button with text -->
+        <button>Submit Form</button>
+        <p>↑ Button with descriptive text (PASS)</p>
+
+        <!-- PASS: Button with aria-label -->
+        <button aria-label="Close dialog">✕</button>
+        <p>↑ Button with aria-label (PASS)</p>
+    </div>
+
+    <!-- ISSUE 4: Link accessibility issues -->
+    <div class="section">
+        <h2>4. Link Accessibility Issues</h2>
+
+        <!-- FAIL: Empty link -->
+        <a href="#"></a>
+        <p>↑ Empty link (SERIOUS)</p>
+
+        <!-- FAIL: Link with only icon -->
+        <a href="#">🔗</a>
+        <p>↑ Link with only icon (SERIOUS)</p>
+
+        <!-- PASS: Link with descriptive text -->
+        <a href="https://www.w3.org/WAI/WCAG21/quickref/">WCAG 2.1 Guidelines</a>
+        <p>↑ Link with descriptive text (PASS)</p>
+
+        <!-- PASS: Link with aria-label -->
+        <a href="#" aria-label="Go to home page">Home</a>
+        <p>↑ Link with aria-label (PASS)</p>
+    </div>
+
+    <!-- ISSUE 5: Color contrast issues -->
+    <div class="section">
+        <h2>5. Color Contrast Issues</h2>
+
+        <!-- FAIL: Low contrast text -->
+        <div class="low-contrast">
+            <p>This text has low contrast and fails WCAG AA standards (SERIOUS)</p>
+        </div>
+
+        <!-- PASS: Good contrast -->
+        <div class="good-contrast">
+            <p>This text has good contrast and passes WCAG AA standards (PASS)</p>
+        </div>
+    </div>
+
+    <!-- ISSUE 6: Heading structure -->
+    <div class="section">
+        <h2>6. Heading Structure</h2>
+
+        <!-- PASS: Proper heading hierarchy -->
+        <h1>Main Topic</h1>
+        <h2>Subtopic</h2>
+        <h3>Sub-subtopic</h3>
+        <p>↑ Proper heading hierarchy (PASS)</p>
+
+        <!-- WARNING: Improper heading hierarchy - skipped from h2 to h4 -->
+        <h2>Another Topic</h2>
+        <h4>Skipped to h4</h4>
+        <p>↑ Skipped h3 level (SHOULD BE WARNING)</p>
+    </div>
+
+    <!-- ISSUE 7: ARIA issues -->
+    <div class="section">
+        <h2>7. ARIA Attribute Issues</h2>
+
+        <!-- FAIL: Invalid ARIA role -->
+        <div role="invalid-role">
+            <p>↑ Invalid ARIA role (SERIOUS)</p>
+        </div>
+
+        <!-- PASS: Valid ARIA roles -->
+        <div role="navigation">
+            <p>↑ Valid ARIA role: navigation (PASS)</p>
+        </div>
+
+        <div role="main">
+            <p>↑ Valid ARIA role: main (PASS)</p>
+        </div>
+
+        <!-- FAIL: Invalid ARIA attribute -->
+        <input type="text" aria-invalid-attr="value">
+        <p>↑ Invalid aria-* attribute (SERIOUS)</p>
+
+        <!-- PASS: Valid ARIA attributes -->
+        <input type="text" aria-label="Search" aria-describedby="search-help">
+        <p id="search-help">↑ Valid ARIA attributes: aria-label, aria-describedby (PASS)</p>
+    </div>
+
+    <!-- ISSUE 8: Table accessibility -->
+    <div class="section">
+        <h2>8. Table Accessibility</h2>
+
+        <!-- FAIL: Table without header or scope -->
+        <table>
+            <tr>
+                <td>Name</td>
+                <td>Age</td>
+                <td>Email</td>
+            </tr>
+            <tr>
+                <td>John</td>
+                <td>30</td>
+                <td>john@example.com</td>
+            </tr>
+        </table>
+        <p>↑ Table without proper headers (SHOULD WARN)</p>
+
+        <!-- PASS: Proper table with headers -->
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Jane</td>
+                    <td>28</td>
+                    <td>jane@example.com</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>↑ Proper table with thead and scope attributes (PASS)</p>
+    </div>
+
+    <!-- ISSUE 9: Keyboard navigation issues -->
+    <div class="section">
+        <h2>9. Keyboard Accessibility Issues</h2>
+
+        <!-- FAIL: Positive tabindex -->
+        <button tabindex="5">Button with positive tabindex</button>
+        <p>↑ Positive tabindex value (MODERATE)</p>
+
+        <!-- PASS: Proper tabindex -->
+        <button tabindex="0">Focusable button</button>
+        <p>↑ Tabindex 0 or -1 (PASS)</p>
+
+        <!-- FAIL: Autofocus attribute -->
+        <!-- Commented out to avoid disrupting the page -->
+        <!-- <input type="text" autofocus placeholder="Input with autofocus"> -->
+        <!-- <p>↑ Autofocus can disorient users (MODERATE)</p> -->
+    </div>
+
+    <!-- ISSUE 10: Language attribute -->
+    <!-- Note: This is checked at the html tag level -->
+    <div class="section">
+        <h2>10. Document Language</h2>
+        <p>This document DOES have a lang attribute: lang="en" (PASS)</p>
+    </div>
+
+    <!-- ISSUE 11: Custom JavaScript with accessibility issues -->
+    <div class="section">
+        <h2>11. Interactive Elements</h2>
+
+        <!-- DIV acting as button without proper semantics -->
+        <div onclick="alert('Clicked')" style="cursor: pointer; padding: 10px; background: lightblue;">
+            Click me (DIV with onclick - no keyboard support)
+        </div>
+        <p>↑ DIV with onclick without keyboard handlers (SERIOUS)</p>
+
+        <!-- PASS: Proper button element -->
+        <button onclick="alert('Clicked')">Proper Button</button>
+        <p>↑ Proper button element (PASS)</p>
+    </div>
+
+    <!-- Summary -->
+    <div class="section">
+        <h2>Summary</h2>
+        <p>This test file should trigger the following types of accessibility issues:</p>
+        <ul>
+            <li>CRITICAL: Missing alt text (image), Empty button</li>
+            <li>SERIOUS: Missing form labels, Empty links, Invalid ARIA attributes, DIV with onclick</li>
+            <li>MODERATE: Low color contrast, Positive tabindex, Autofocus</li>
+            <li>INFO: Improper heading hierarchy</li>
+        </ul>
+        <p><strong>Expected total issues found: ~15-20</strong></p>
+    </div>
+
+</body>
+</html>
