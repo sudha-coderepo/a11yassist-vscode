@@ -3,7 +3,7 @@ node_modules/*
 yarn.lock
 
 # Compiled output
-out/
+out/*
 dist/
 build/
 
