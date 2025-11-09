@@ -1,12 +1,60 @@
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Source files (only out/ will be packaged)
+src/**
+*.ts
+tsconfig.json
+.eslintrc.json
+
+# Development and testing
 .vscode/**
 .vscode-test/**
-src/**
-.gitignore
-.yarnrc
-vsc-extension-quickstart.md
-**/tsconfig.json
-**/.eslintrc.json
-**/*.map
-**/*.ts
+*.code-workspace
+test/**
+coverage/**
+.nyc_output/**
+
+# Node modules and dependencies
 node_modules/**
-.eslintrc.json
+package-lock.json
+yarn.lock
+.yarnrc
+
+# Documentation and test files
+README_OLD.md
+ACCESSIBILITY_AUDIT_VS_HTML_DEBUG.md
+QUICK_REFERENCE_AUDIT.md
+sample.html
+vsc-extension-quickstart.md
+
+# IDE and editor files
+.idea/**
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Logs
+logs/**
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary and backup files
+*.bak
+*.backup
+.temp/**
+*.tmp
+
+# Development scripts and config
+scripts/**
+.env
+.env.local
+
+# Source maps
+**/*.map
