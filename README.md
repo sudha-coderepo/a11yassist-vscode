@@ -6,24 +6,24 @@
 
 ![A11YAssist Logo](https://img.shields.io/badge/A11YAssist-Accessibility-blue) ![Windows](https://img.shields.io/badge/Platform-Windows-0078D6) ![VS Code](https://img.shields.io/badge/VS%20Code-1.75+-007ACC)
 
-## 🌟 Overview
+## Overview
 
 **A11YAssist** is a comprehensive accessibility assistant extension for Visual Studio Code designed to make software development accessible for developers with disabilities. It provides enhanced support for:
 
-- 🔊 **Visual impairments** - Screen reader enhancements and announcements
-- ⌨️ **Motor limitations** - Complete keyboard-only navigation
-- 🧠 **Cognitive challenges** - Simplified workflows and contextual guidance
+- **Visual impairments** - Screen reader enhancements and announcements
+- **Motor limitations** - Complete keyboard-only navigation
+- **Cognitive challenges** - Simplified workflows and contextual guidance
 
-## ✨ Key Features
+## Key Features
 
-### 🔊 Screen Reader Enhancements
+### Screen Reader Enhancements
 - Context-aware announcements for current editor state
 - Adjustable verbosity (minimal, normal, verbose)
 - Real-time selection and change notifications
 - Diagnostic announcements for errors/warnings
 - **Shortcuts:** `Ctrl+Shift+C` (announce context), `Ctrl+Shift+D` (describe element)
 
-### ⌨️ Keyboard Navigation
+### Keyboard Navigation
 - Complete keyboard-only workflow support
 - Interactive keyboard shortcut guide
 - Quick navigation menus for panels and views
@@ -31,7 +31,7 @@
 - Focus management between editor and panels
 - **Shortcut:** `Ctrl+Shift+K` (show keyboard guide)
 
-### 🔍 Accessibility Auditing
+### Accessibility Auditing
 Automatically scan your code for accessibility issues:
 - **WCAG 2.1 compliance** checking (Level A, AA, AAA)
 - **ARIA validation** (WAI-ARIA 1.2 specification)
@@ -43,7 +43,7 @@ Automatically scan your code for accessibility issues:
 **Supported files:** HTML, JSX/TSX, CSS/SCSS/Less
 **Shortcut:** `Ctrl+Shift+A` (run audit)
 
-### 💡 Contextual Guidance
+### Contextual Guidance
 Real-time accessibility tips as you code:
 - Context-aware suggestions based on current element
 - Best practices and code examples
@@ -52,7 +52,7 @@ Real-time accessibility tips as you code:
 
 **Topics covered:** Images, forms, buttons, links, ARIA, headings, color contrast, tables
 
-### 📊 Usage Analytics
+### Usage Analytics
 Optional, privacy-focused analytics (local storage only):
 - Track audits run and issues found/fixed
 - Monitor feature usage patterns
@@ -60,13 +60,13 @@ Optional, privacy-focused analytics (local storage only):
 - Export data for research purposes
 - **All data stays on your machine**
 
-### 🎨 A11YAssist Panel
+### A11YAssist Panel
 Dedicated sidebar panel with three views:
 1. **Accessibility Issues** - Grouped by severity with click-to-navigate
 2. **Contextual Guidance** - Tips, best practices, and resources
 3. **Usage Statistics** - Your accessibility metrics
 
-## 🚀 Quick Start (Windows)
+## Quick Start (Windows)
 
 ### Installation
 
@@ -101,7 +101,7 @@ code --install-extension a11yassist-1.0.0.vsix
 
 **See [WINDOWS_INSTALL.md](WINDOWS_INSTALL.md) for detailed instructions.**
 
-## 📖 Usage
+## Usage
 
 ### First Time Setup
 
@@ -132,7 +132,7 @@ code --install-extension a11yassist-1.0.0.vsix
 
 Press `Ctrl+Shift+K` to open the interactive keyboard guide.
 
-## ⌨️ Keyboard Shortcuts
+## Keyboard Shortcuts
 
 | Shortcut | Command |
 |----------|---------|
@@ -144,7 +144,7 @@ Press `Ctrl+Shift+K` to open the interactive keyboard guide.
 | `Shift+F8` | Previous error/warning |
 | `Ctrl+M` | Toggle Tab key mode |
 
-## ⚙️ Configuration
+## Configuration
 
 ```json
 {
@@ -158,7 +158,7 @@ Press `Ctrl+Shift+K` to open the interactive keyboard guide.
 }
 ```
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 vscode-accessibility-extension/
@@ -187,16 +187,16 @@ vscode-accessibility-extension/
 └── QUICK_START.md                      # Quick start guide
 ```
 
-## 📋 Accessibility Standards
+## Accessibility Standards
 
 A11YAssist helps you comply with:
 
-- ✅ **WCAG 2.1** (Level A, AA, AAA)
-- ✅ **WAI-ARIA 1.2** Specification
-- ✅ **Section 508** U.S. Standards
-- ✅ **ADA** Digital Accessibility
+- **WCAG 2.1** (Level A, AA, AAA)
+- **WAI-ARIA 1.2** Specification
+- **Section 508** U.S. Standards
+- **ADA** Digital Accessibility
 
-## 🎯 Detected Issues
+## Detected Issues
 
 A11YAssist detects **14 types of accessibility issues**:
 
@@ -213,18 +213,18 @@ A11YAssist detects **14 types of accessibility issues**:
 - Empty links/buttons
 - And more...
 
-## 🔬 Research & Privacy
+## Research & Privacy
 
 This extension was developed as part of accessibility research at Ontario Tech University.
 
 **Privacy Commitment:**
-- ✅ All analytics stored **locally** on your machine
-- ✅ **No data** sent to external servers
-- ✅ Analytics can be **completely disabled**
-- ✅ You control your data
-- ✅ Export feature for **voluntary** research participation
+- All analytics stored **locally** on your machine
+- **No data** sent to external servers
+- Analytics can be **completely disabled**
+- You control your data
+- Export feature for **voluntary** research participation
 
-## 🧪 Testing with Screen Readers (Windows)
+## Testing with Screen Readers (Windows)
 
 ### Windows Narrator (Built-in)
 - Start: `Win+Ctrl+Enter`
@@ -237,7 +237,7 @@ This extension was developed as part of accessibility research at Ontario Tech U
 ### JAWS (Commercial)
 - Download: https://www.freedomscientific.com/products/software/jaws/
 
-## 🛠️ Development
+## Development
 
 ### Watch Mode
 ```powershell
@@ -254,14 +254,8 @@ npm run watch
 vsce package
 ```
 
-## 📚 Documentation
 
-- **[WINDOWS_INSTALL.md](WINDOWS_INSTALL.md)** - Complete Windows installation guide
-- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Development setup for Windows
-- **[QUICK_START.md](QUICK_START.md)** - 5-minute quick start
-- **[ACCESSIBILITY_AUDIT_REPORT.md](ACCESSIBILITY_AUDIT_REPORT.md)** - Compliance audit
-
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Extension won't start
 - Check Output → Extension Host for errors
@@ -281,9 +275,7 @@ npm install
 npm run compile
 ```
 
-See [WINDOWS_INSTALL.md](WINDOWS_INSTALL.md) for more troubleshooting.
-
-## 🤝 Contributing
+##  Contributing
 
 We welcome contributions! Areas for improvement:
 - Additional file type support
@@ -292,43 +284,33 @@ We welcome contributions! Areas for improvement:
 - Screen reader compatibility improvements
 - Internationalization
 
-## 📖 Resources
+## Resources
 
 - [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
 - [WAI-ARIA 1.2 Spec](https://www.w3.org/TR/wai-aria-1.2/)
 - [VS Code Accessibility](https://code.visualstudio.com/docs/editor/accessibility)
 - [WebAIM Resources](https://webaim.org/)
 
-## 📄 License
+## License
 
-MIT License - Copyright (c) 2025 Sudha Rajendran and Rohitha Janga, Ontario Tech University
+MIT License - Copyright (c) 2025 Sudha Rajendran, Ontario Tech University
 
 See [LICENSE](LICENSE) file for details.
 
-## 👥 Authors
+## Authors
 
 **Sudha Rajendran**
 Ontario Tech University
 Email: sudha.rajendran@ontariotechu.net
 
-## 💬 Support
+## Support
 
 - Use the "Provide Accessibility Feedback" command in VS Code
 - Email: sudha.rajendran@ontariotechu.net
 - Check documentation files for detailed guides
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 This project addresses accessibility gaps in modern IDEs and supports inclusive software development practices. We thank the accessibility community whose work informed this extension's design.
 
 ---
-
-<div align="center">
-
-**Making VS Code accessible for everyone** ♿
-
-**A11YAssist** - Your Accessibility Assistant
-
-[Install](WINDOWS_INSTALL.md) | [Quick Start](QUICK_START.md) | [Documentation](SETUP_GUIDE.md) | [Report Issue](mailto:sudha.rajendran@ontariotechu.net)
-
-</div>
